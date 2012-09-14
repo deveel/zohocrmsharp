@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deveel.ZohoCRM", "Deveel.ZohoCRM\Deveel.ZohoCRM.csproj", "{B2206902-86E2-4EC7-8BE3-6E36514AD46E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deveel.ZohoCRM.Tests", "Deveel.ZohoCRM.Tests\Deveel.ZohoCRM.Tests.csproj", "{75B673A9-38AF-44FA-83C4-9DAF0F5CD215}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2206902-86E2-4EC7-8BE3-6E36514AD46E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2206902-86E2-4EC7-8BE3-6E36514AD46E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2206902-86E2-4EC7-8BE3-6E36514AD46E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2206902-86E2-4EC7-8BE3-6E36514AD46E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75B673A9-38AF-44FA-83C4-9DAF0F5CD215}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75B673A9-38AF-44FA-83C4-9DAF0F5CD215}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75B673A9-38AF-44FA-83C4-9DAF0F5CD215}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75B673A9-38AF-44FA-83C4-9DAF0F5CD215}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
