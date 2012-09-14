@@ -7,3 +7,4 @@ TestResults
 *.user
 *.suo
 /src/Deveel.ZohoCRM/_ReSharper.Deveel.ZohoCRM
+/src/packages
