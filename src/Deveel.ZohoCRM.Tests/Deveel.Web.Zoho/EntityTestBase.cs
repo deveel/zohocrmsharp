@@ -16,7 +16,7 @@ namespace Deveel.Web.Zoho {
 			var entry = CreateEntry(0);
 			var response = client.InsertRecord(entry);
 
-			Assert.AreEqual(1, response.RecordDetails.Count);
+			Assert.AreEqual(1, response.RecordDetails.Count());
 
 			var detail = response.RecordDetails.First();
 			Console.Out.WriteLine("(ID = {0})  Created On {1} by {2}", detail.Id, detail.CreatedDate, detail.CreatedBy);
@@ -32,7 +32,7 @@ namespace Deveel.Web.Zoho {
 			
 			var response = client.InsertRecords(entries);
 
-			Assert.AreEqual(3, response.RecordDetails.Count);
+			Assert.AreEqual(3, response.RecordDetails.Count());
 
 			foreach (var detail in response.RecordDetails) {
 				Console.Out.WriteLine("(ID = {0})  Created On {1} by {2}", detail.Id, detail.CreatedDate, detail.CreatedBy);
@@ -56,12 +56,53 @@ namespace Deveel.Web.Zoho {
 
 			var response = client.InsertRecord(CreateEntry(0));
 
-			Assert.AreEqual(1, response.RecordDetails.Count);
+			Assert.AreEqual(1, response.RecordDetails.Count());
 
 			var id = response.RecordDetails.First().Id;
 			var record = client.GetRecordById<T>(id);
 
 			Assert.IsNotNull(record);
+			Assert.AreEqual(id, record.Id);
+		}
+
+		[Test]
+		public void InsertAndDeleteById() {
+			var client = CreateClient();
+
+			var response = client.InsertRecord(CreateEntry(0));
+
+			Assert.AreEqual(1, response.RecordDetails.Count());
+
+			var id = response.RecordDetails.First().Id;
+			Assert.IsTrue(client.DeleteRecordById<T>(id));
+		}
+
+		[Test]
+		public void InsertAndDeleteByObject() {
+			var client = CreateClient();
+
+			var response = client.InsertRecord(CreateEntry(0));
+
+			Assert.AreEqual(1, response.RecordDetails.Count());
+
+			var id = response.RecordDetails.First().Id;
+			var record = client.GetRecordById<T>(id);
+
+			Assert.IsNotNull(record);
+			Assert.AreEqual(id, record.Id);
+
+			Assert.IsTrue(client.DeleteRecord(record));
+
+			record = client.GetRecordById<T>(id);
+
+			Assert.IsNull(record);
+		}
+
+		[Test]
+		public void DeleteByInvalidId() {
+			var client = CreateClient();
+
+			Assert.IsFalse(client.DeleteRecordById<T>("invalidId"));
 		}
 	}
 }

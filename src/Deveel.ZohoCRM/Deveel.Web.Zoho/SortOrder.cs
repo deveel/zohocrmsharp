@@ -3,6 +3,7 @@
 namespace Deveel.Web.Zoho {
 	public enum SortOrder {
 		Ascending,
-		Descending
+		Descending,
+		Default
 	}
 }

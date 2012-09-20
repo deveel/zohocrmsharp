@@ -13,8 +13,8 @@ namespace Deveel.Web.Zoho {
 			Name = accountName;
 		}
 
-		public override string Id {
-			get { return GetString("ACCOUNTID"); }
+		protected override string IdFieldName {
+			get { return "ACCOUNTID"; }
 		}
 
 		public string Name {
