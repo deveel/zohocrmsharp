@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace Deveel.Web.Zoho {
@@ -85,12 +87,35 @@ namespace Deveel.Web.Zoho {
 				if (element.Name != "row")
 					continue;
 
-				var entity = Activator.CreateInstance<T>();
+				var entity = (T) Activator.CreateInstance(typeof(T), true);
 				entity.LoadFromXml(element);
 				collection.Add(entity);
 			}
 		}
 
+		public XElement ToXml() {
+			XElement root = new XElement(EntityName);
+			var rowNum = 1;
+			foreach (var entity in this) {
+				entity.AppendTo(root, rowNum++);
+			}
+			return root;
+		}
+
+		public string ToXmlString() {
+			var element = ToXml();
+			var sb = new StringBuilder();
+
+			using (var writer = new StringWriter(sb)) {
+				using (var xmlWriter = new XmlTextWriter(writer)) {
+					element.WriteTo(xmlWriter);
+				}
+			}
+
+			return sb.ToString();
+		}
+
+		/*
 		internal string ToXmlString() {
 			var sb = new StringBuilder();
 			sb.AppendFormat("<{0}>", EntityName);
@@ -101,5 +126,6 @@ namespace Deveel.Web.Zoho {
 			sb.AppendFormat("</{0}>", EntityName);
 			return sb.ToString();
 		}
+		*/
 	}
 }

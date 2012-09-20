@@ -30,6 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Deveel.ZohoCRM.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="RestSharp">
       <HintPath>..\packages\RestSharp.104.1\lib\net35\RestSharp.dll</HintPath>
@@ -42,9 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Deveel.Web.Zoho\AllowInsertsAttribute.cs" />
+    <Compile Include="Deveel.Web.Zoho\AllowMultipleInsertsAttribute.cs" />
     <Compile Include="Deveel.Web.Zoho\ConditionOperator.cs" />
     <Compile Include="Deveel.Web.Zoho\EntityNameAttribute.cs" />
     <Compile Include="Deveel.Web.Zoho\InsertRecodDetail.cs" />
+    <Compile Include="Deveel.Web.Zoho\OrderItem.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoAccount.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoContact.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoCrmClient.cs" />
@@ -52,11 +61,16 @@
     <Compile Include="Deveel.Web.Zoho\ZohoEntityCollection.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoInsertResponse.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoLead.cs" />
+    <Compile Include="Deveel.Web.Zoho\ZohoOrderBase.cs" />
+    <Compile Include="Deveel.Web.Zoho\ZohoProduct.cs" />
+    <Compile Include="Deveel.Web.Zoho\ZohoPurchaseOrder.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoResponse.cs" />
+    <Compile Include="Deveel.Web.Zoho\ZohoSalesOrder.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoSearchCondition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Deveel.ZohoCRM.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

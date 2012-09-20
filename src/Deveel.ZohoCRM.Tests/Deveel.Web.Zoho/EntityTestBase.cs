@@ -38,5 +38,30 @@ namespace Deveel.Web.Zoho {
 				Console.Out.WriteLine("(ID = {0})  Created On {1} by {2}", detail.Id, detail.CreatedDate, detail.CreatedBy);
 			}
 		}
+
+		[Test]
+		public void InsertTwiceTheSameRecordAtTheSameTime() {
+			var client = CreateClient();
+			var records = new ZohoEntityCollection<T> {
+				CreateEntry(0), 
+				CreateEntry(0)
+			};
+
+			var response = client.InsertRecords(records);
+		}
+
+		[Test]
+		public void InsertAndGetById() {
+			var client = CreateClient();
+
+			var response = client.InsertRecord(CreateEntry(0));
+
+			Assert.AreEqual(1, response.RecordDetails.Count);
+
+			var id = response.RecordDetails.First().Id;
+			var record = client.GetRecordById<T>(id);
+
+			Assert.IsNotNull(record);
+		}
 	}
 }
