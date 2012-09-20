@@ -12,6 +12,7 @@
     <AssemblyName>Deveel.ZohoCRM</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,7 +54,9 @@
     <Compile Include="Deveel.Web.Zoho\ConditionOperator.cs" />
     <Compile Include="Deveel.Web.Zoho\EntityNameAttribute.cs" />
     <Compile Include="Deveel.Web.Zoho\InsertRecodDetail.cs" />
+    <Compile Include="Deveel.Web.Zoho\ListOptions.cs" />
     <Compile Include="Deveel.Web.Zoho\OrderItem.cs" />
+    <Compile Include="Deveel.Web.Zoho\SortOrder.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoAccount.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoContact.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoCrmClient.cs" />

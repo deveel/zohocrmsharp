@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -6,8 +7,11 @@ using System.Xml.Linq;
 
 namespace Deveel.Web.Zoho {
 	[Serializable]
-	public abstract class ZohoEntity : ISerializable {
+	public abstract class ZohoEntity : ISerializable, IEnumerable<KeyValuePair<string, object>> {
 		private readonly Dictionary<string, object> fields = new Dictionary<string, object>();
+
+		private const string OwnerIdFieldName = "SMOWNERID";
+		private const string CreatorIdFieldName = "SMCREATORID";
 
 		protected ZohoEntity() {
 			var entityName = Attribute.GetCustomAttribute(GetType(), typeof (EntityNameAttribute)) as EntityNameAttribute;
@@ -25,8 +29,27 @@ namespace Deveel.Web.Zoho {
 
 		internal string EntityName { get; private set; }
 
-		public virtual string Id {
+		public string Id {
+			get { 
+				var fieldName = IdFieldName;
+				if (String.IsNullOrEmpty(fieldName))
+					return null;
+				if (!HasValue(fieldName))
+					return null;
+				return GetString(fieldName);
+			}
+		}
+
+		protected virtual string IdFieldName {
 			get { return null; }
+		}
+
+		public string OwnerId {
+			get { return GetString(OwnerIdFieldName); }
+		}
+
+		public string CreatorId {
+			get { return GetString(CreatorIdFieldName); }
 		}
 
 		public bool HasValue(string fieldName) {
@@ -209,6 +232,16 @@ namespace Deveel.Web.Zoho {
 
 		internal virtual  void AppendFieldsToRow(XElement rowElement) {
 			foreach (var field in fields) {
+				var fieldName = field.Key;
+				var idFieldName = IdFieldName;
+				if (!String.IsNullOrEmpty(idFieldName) &&
+					idFieldName.Equals(fieldName))
+					continue;
+
+				if (fieldName.Equals(OwnerIdFieldName) ||
+					fieldName.Equals(CreatorIdFieldName))
+					continue;
+
 				var fieldElement = new XElement("FL");
 				fieldElement.SetAttributeValue("val", field.Key);
 				fieldElement.Add(field.Value);
@@ -245,6 +278,16 @@ namespace Deveel.Web.Zoho {
 			foreach (var field in fields) {
 				info.AddValue(field.Key, field.Value);
 			}
+		}
+
+		public IEnumerator<KeyValuePair<string, object>> GetEnumerator() {
+			lock (fields) {
+				return fields.GetEnumerator();
+			}
+		}
+
+		IEnumerator IEnumerable.GetEnumerator() {
+			return GetEnumerator();
 		}
 	}
 }

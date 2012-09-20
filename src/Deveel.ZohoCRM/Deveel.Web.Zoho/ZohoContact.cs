@@ -6,11 +6,21 @@ namespace Deveel.Web.Zoho {
 		internal ZohoContact() {
 		}
 
-		public ZohoContact(string email) {
+		public ZohoContact(string email) 
+			: this(email, null, null) {
+		}
+
+		public ZohoContact(string email, string firstName, string lastName) {
 			if (email == null)
 				throw new ArgumentNullException("email");
 
 			Email = email;
+			FirstName = firstName;
+			LastName = lastName;
+		}
+
+		protected override string IdFieldName {
+			get { return "CONTACTID"; }
 		}
 
 		public string FirstName {
