@@ -38,6 +38,11 @@ namespace Deveel.Web.Zoho {
 			private set { SetValue("Email", value); }
 		}
 
+		public string AccountName {
+			get { return GetString("Account Name"); }
+			set { SetValue("Account Name", value); }
+		}
+
 		public bool EmailOptOut {
 			get { return GetBoolean("Email Opt Out"); }
 			set { SetValue("Email Opt Out", value); }
@@ -68,7 +73,7 @@ namespace Deveel.Web.Zoho {
 			set { SetValue("Asst Phone", value); }
 		}
 
-		public string ContactOwner {
+		public string Owner {
 			get { return GetString("Contact Owner"); }
 			set { SetValue("Contact Owner", value); }
 		}

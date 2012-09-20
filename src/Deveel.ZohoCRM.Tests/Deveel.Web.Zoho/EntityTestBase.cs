@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Text;
 
 using NUnit.Framework;
 
@@ -103,6 +105,55 @@ namespace Deveel.Web.Zoho {
 			var client = CreateClient();
 
 			Assert.IsFalse(client.DeleteRecordById<T>("invalidId"));
+		}
+
+		[Test]
+		public void CreateAndUploadFile() {
+			var client = CreateClient();
+
+			var response = client.InsertRecord(CreateEntry(0));
+
+			Assert.AreEqual(1, response.RecordDetails.Count());
+
+			var id = response.RecordDetails.First().Id;
+
+			var fileContents = CreateTextFileContent();
+			var fileName = String.Format("{0}.txt", Guid.NewGuid().ToString("N"));
+
+			client.UploadFileToRecord<T>(id, fileName, "text/plain", fileContents);
+		}
+
+		[Test]
+		public void CreateAndUploadFileAndDelete() {
+			var client = CreateClient();
+
+			var response = client.InsertRecord(CreateEntry(0));
+
+			Assert.AreEqual(1, response.RecordDetails.Count());
+
+			var id = response.RecordDetails.First().Id;
+
+			var fileContents = CreateTextFileContent();
+			var fileName = String.Format("{0}.txt", Guid.NewGuid().ToString("N"));
+
+			client.UploadFileToRecord<T>(id, fileName, "text/plain", fileContents);
+		}
+
+		private byte[] CreateTextFileContent() {
+			string fileName = Path.Combine(Environment.CurrentDirectory, "uploadFileTest.txt");
+
+			var memoryStream = new MemoryStream();
+			using (var inputStream = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+				var readCount = 0;
+				var readBuffer = new byte[512];
+				while ((readCount = inputStream.Read(readBuffer, 0, readBuffer.Length)) != 0) {
+					memoryStream.Write(readBuffer, 0, readCount);
+				}
+			}
+
+			memoryStream.Flush();
+			var content = memoryStream.ToArray();
+			return content;
 		}
 	}
 }

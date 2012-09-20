@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -146,6 +147,28 @@ namespace Deveel.Web.Zoho {
 			return XDocument.Parse(response.Content);
 		}
 
+		private ZohoInsertResponse PostFile(string module, string id, byte[] bytes, string fileName, string contentType) {
+			if (module == null)
+				throw new ArgumentNullException("module");
+
+			var client = new RestClient(BaseUrl);
+			var request = new RestRequest(Method.POST);
+			request.Resource = "{module}/uploadFile?authtoken={authtoken}&scope={scope}&id={id}";
+			request.AddParameter("module", module, ParameterType.UrlSegment);
+			request.AddParameter("authtoken", authToken, ParameterType.UrlSegment);
+			request.AddParameter("scope", "crmapi", ParameterType.UrlSegment);
+			request.AddParameter("id", id, ParameterType.UrlSegment);
+			request.AddFile("content", bytes, fileName, contentType);
+			request.Timeout = 5000;
+
+			var response = client.Execute(request);
+			if (response.StatusCode != HttpStatusCode.OK)
+				throw response.ErrorException;
+
+			var xmlResponse = XDocument.Parse(response.Content);
+			return new ZohoInsertResponse(module, "uploadFile", xmlResponse);
+		}
+
 		private ZohoEntityCollection<T> Search<T>(string module, IEnumerable<string> selectColumns, ZohoSearchCondition searchCondition) where T : ZohoEntity {
 			var parameters = GetListOptionsParameters(module, new ListOptions {SelectColumns = selectColumns});
 			parameters.Add("searchCondition", searchCondition.ToString());
@@ -259,6 +282,66 @@ namespace Deveel.Web.Zoho {
 			response.LoadFromXml(xmlResponse.Root);
 
 			return response.Code == "5000";
+		}
+
+		public string UploadFileToRecord<T>(string id, string fileName, string contentType, Stream inputStream) where  T :ZohoEntity{
+			if (inputStream == null)
+				throw new ArgumentNullException("inputStream");
+
+			var bytes = ReadFromStream(inputStream);
+			return UploadFileToRecord<T>(id, fileName, contentType, bytes);
+		}
+
+		public string UploadFileToRecord<T>(string id, string fileName, string contentType, byte[] content) where T : ZohoEntity {
+			if (content == null)
+				throw new ArgumentNullException("content");
+
+			var response = PostFile(ModuleName<T>(), id, content, fileName, contentType);
+			if (response.IsError)
+				throw new InvalidOperationException("An error occurred while uploading the file");
+
+			return response.RecordDetails.First().Id;
+		}
+
+		public string UploadFileToRecord<T>(string recordId, string fileName, string contentType, Uri uri) where T : ZohoEntity {
+			byte[] bytes;
+
+			using (var client = new WebClient()) {
+				var inputStream = client.OpenRead(uri);
+				if (inputStream == null)
+					throw new FileNotFoundException("The uri specified returned no file.");
+
+				bytes = ReadFromStream(inputStream);
+			}
+
+			return UploadFileToRecord<T>(recordId, fileName, contentType, bytes);
+		}
+
+		public string UploadFileToRecord<T>(string recordId, string fileName, string contentType, string filePath) where T : ZohoEntity {
+			if (!File.Exists(filePath))
+				throw new ArgumentException("File specified was not found in the system.");
+
+			byte[] bytes;
+			using (var inputStream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+				bytes = ReadFromStream(inputStream);
+			}
+
+			return UploadFileToRecord<T>(recordId, fileName, contentType, bytes);
+		}
+
+		private static byte[] ReadFromStream(Stream inputStream) {
+			if (!inputStream.CanRead)
+				throw new ArgumentException("The given stream cannot read");
+
+			var memoryStream = new MemoryStream();
+			int readCount;
+			byte[] readBuffer = new byte[1024];
+			while ((readCount = inputStream.Read(readBuffer, 0, readBuffer.Length)) != 0) {
+				memoryStream.Write(readBuffer, 0, readCount);
+			}
+
+			memoryStream.Flush();
+			return memoryStream.ToArray();			
 		}
 	}
 }
