@@ -77,7 +77,7 @@ namespace Deveel.Web.Zoho {
 			return selectColumnsSb.ToString();
 		}
 
-		private static IDictionary<string, string> GetListOptionsParameters(string module, ListOptions options) {
+		private static IDictionary<string, string> GetListOptionsParameters(string module, ListOptions options, bool requireSelectColumns) {
 			var parameters = new Dictionary<string, string>();
 			if (options.FromIndex != null)
 				parameters.Add("fromIndex", options.FromIndex.Value.ToString(CultureInfo.InvariantCulture));
@@ -89,7 +89,7 @@ namespace Deveel.Web.Zoho {
 				parameters.Add("sortColumnString", options.SortColumn);
 			if (options.SortOrder != SortOrder.Default)
 				parameters.Add("sortOrderString", options.SortOrder == SortOrder.Ascending ? "asc" : "desc");
-			if (options.SelectColumns != null) 
+			if (options.SelectColumns != null || requireSelectColumns)
 				parameters.Add("selectColumns", SelectColumns(module, options.SelectColumns));
 			return parameters;			
 		}
@@ -119,9 +119,12 @@ namespace Deveel.Web.Zoho {
 		}
 
 		private ZohoEntityCollection<T> GetEntities<T>(string module, string method, IEnumerable<KeyValuePair<string, string>> parameters) where T : ZohoEntity {
-			var response = GetData(module, method, parameters);
+			// var response = GetData(module, method, parameters);
+			var response = GetResponse(module, method, parameters);
+			response.ThrowIfError();
 
-			var doc = XDocument.Parse(response);
+			/*
+			var doc = XDocument.Parse(response.ResponseContent);
 			var root = doc.Root;
 			if (root.Name == "response")
 				root = root.Descendants().First();
@@ -131,6 +134,9 @@ namespace Deveel.Web.Zoho {
 			var collection = new ZohoEntityCollection<T>();
 			collection.LoadFromXml(root);
 			return collection.AsReadOnly();
+			*/
+
+			return response.LoadCollectionFromResul<T>();
 		}
 
 		private ZohoInsertResponse PostData(string module, string method, IDictionary<string, string> parameters, string xmlData) {
@@ -170,7 +176,7 @@ namespace Deveel.Web.Zoho {
 		}
 
 		private ZohoEntityCollection<T> Search<T>(string module, IEnumerable<string> selectColumns, ZohoSearchCondition searchCondition) where T : ZohoEntity {
-			var parameters = GetListOptionsParameters(module, new ListOptions {SelectColumns = selectColumns});
+			var parameters = GetListOptionsParameters(module, new ListOptions {SelectColumns = selectColumns}, true);
 			parameters.Add("searchCondition", searchCondition.ToString());
 			return GetEntities<T>(module, "getSearchRecords", parameters);
 		}
@@ -223,12 +229,12 @@ namespace Deveel.Web.Zoho {
 
 		public ZohoEntityCollection<T> GetRecords<T>(ListOptions options) where T : ZohoEntity {
 			var moduleName = ModuleName<T>();
-			return GetEntities<T>(moduleName, "getRecords", GetListOptionsParameters(moduleName, options));
+			return GetEntities<T>(moduleName, "getRecords", GetListOptionsParameters(moduleName, options, false));
 		}
 
 		public ZohoEntityCollection<T> GetMyRecords<T>(ListOptions options) where T : ZohoEntity {
 			var moduleName = ModuleName<T>();
-			return GetEntities<T>(moduleName, "getMyRecords", GetListOptionsParameters(moduleName, options));			
+			return GetEntities<T>(moduleName, "getMyRecords", GetListOptionsParameters(moduleName, options, false));			
 		}
 
 		public bool UpdateRecord<T>(T record) where T : ZohoEntity {
@@ -252,7 +258,7 @@ namespace Deveel.Web.Zoho {
 
 		public ZohoEntityCollection<TRelated> GetRelatedRecordsTo<TSource, TRelated>(string id, int? fromIndex, int? toIndex) where TSource : ZohoEntity where TRelated : ZohoEntity {
 			var parentModuleName = ModuleName<TSource>();
-			var paremeters = GetListOptionsParameters(null, new ListOptions {FromIndex = fromIndex, ToIndex = toIndex});
+			var paremeters = GetListOptionsParameters(null, new ListOptions {FromIndex = fromIndex, ToIndex = toIndex}, false);
 			paremeters.Add("parentModule", parentModuleName);
 			paremeters.Add("id", id);
 

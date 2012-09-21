@@ -43,7 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Deveel.Web.Zoho\AccountEntityContextTest.cs" />
     <Compile Include="Deveel.Web.Zoho\AccountsTest.cs" />
+    <Compile Include="Deveel.Web.Zoho\EntityContextTestBase.cs" />
     <Compile Include="Deveel.Web.Zoho\EntityTestBase.cs" />
     <Compile Include="Deveel.Web.Zoho\SalesOrderTest.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoCrmTestBase.cs" />

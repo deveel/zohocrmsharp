@@ -4,6 +4,8 @@ using System.Xml.Linq;
 
 namespace Deveel.Web.Zoho {
 	public class ZohoResponse {
+		private XElement resultNode;
+
 		internal ZohoResponse(string module, string method, string responseContent) {
 			if (module == null)
 				throw new ArgumentNullException("module");
@@ -58,12 +60,23 @@ namespace Deveel.Web.Zoho {
 		}
 
 		internal virtual void LoadResultFromXml(XElement resultElement) {
-			var code = resultElement.Descendants("code").First();
-			var message = resultElement.Descendants("message").First();
-			if (code != null)
-				Code = code.Value;
-			if (message != null)
-				Message = message.Value;			
+			if (resultElement.Descendants("code").Any()) {
+				var code = resultElement.Descendants("code").First();
+				var message = resultElement.Descendants("message").First();
+				if (code != null)
+					Code = code.Value;
+				if (message != null)
+					Message = message.Value;
+			} else {
+				resultNode = resultElement;
+			}
+		}
+
+		internal ZohoEntityCollection<T> LoadCollectionFromResul<T>() where T :ZohoEntity {
+			var collection = new ZohoEntityCollection<T>(true);
+			var firstNode = resultNode.Elements().First();
+			collection.LoadFromXml(firstNode);
+			return collection;
 		}
 	}
 }
