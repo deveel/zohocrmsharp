@@ -30,6 +30,8 @@ namespace Deveel.Web.Zoho {
 
 		public string Code { get; private set; }
 
+		public bool NoData { get; private set; }
+
 		internal string ResponseContent { get; private set; }
 
 		public ZohoResponseException Error {
@@ -56,6 +58,15 @@ namespace Deveel.Web.Zoho {
 					Message = message.Value;			
 			} else if (firstChild.Name == "result") {
 				LoadResultFromXml(firstChild);
+			} else if (firstChild.Name == "nodata") {
+				var code = firstChild.Descendants("code").First();
+				var message = firstChild.Descendants("message").First();
+				if (code != null)
+					Code = code.Value;
+				if (message != null)
+					Message = message.Value;
+
+				NoData = true;
 			}
 		}
 
@@ -74,8 +85,10 @@ namespace Deveel.Web.Zoho {
 
 		internal ZohoEntityCollection<T> LoadCollectionFromResul<T>() where T :ZohoEntity {
 			var collection = new ZohoEntityCollection<T>(true);
-			var firstNode = resultNode.Elements().First();
-			collection.LoadFromXml(firstNode);
+			if (!NoData) {
+				var firstNode = resultNode.Elements().First();
+				collection.LoadFromXml(firstNode);
+			}
 			return collection;
 		}
 	}

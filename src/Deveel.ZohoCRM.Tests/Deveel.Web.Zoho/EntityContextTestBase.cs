@@ -36,5 +36,18 @@ namespace Deveel.Web.Zoho {
 			Assert.AreEqual(1, result.Count);
 			Assert.AreEqual(objId, result.First().Id);
 		}
+
+		[Test]
+		public void SearchNonExisting() {
+			var client = CreateClient();
+
+			var context = client.GetContext<T>();
+
+			var obj = CreateTestObject();
+			var uniqueValue = obj.GetValue<object>(NonDuplicateFieldName);
+			var result = context.Is(NonDuplicateFieldName, uniqueValue);
+
+			Assert.AreEqual(0, result.Count);
+		}
 	}
 }
