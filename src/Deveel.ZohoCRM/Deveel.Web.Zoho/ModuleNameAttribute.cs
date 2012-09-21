@@ -4,9 +4,9 @@ namespace Deveel.Web.Zoho {
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 	sealed class ModuleNameAttribute : Attribute {
 		public ModuleNameAttribute(string entityName) {
-			EntityName = entityName;
+			Name = entityName;
 		}
 
-		public string EntityName { get; private set; }
+		public string Name { get; private set; }
 	}
 }

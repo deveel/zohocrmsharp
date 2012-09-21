@@ -20,7 +20,12 @@ namespace Deveel.Web.Zoho {
 				throw new ArgumentNullException("authToken");
 
 			this.authToken = authToken;
+			DuplicateCheck = InsertDuplicateCheck.ThrowError;
 		}
+
+		public InsertDuplicateCheck DuplicateCheck { get; set; }
+
+		public bool? InsertApproval { get; set; }
 
 		private static void AssertTypeIsNotAbstract(Type type) {
 			if (type.IsAbstract)
@@ -45,7 +50,7 @@ namespace Deveel.Web.Zoho {
 			if (entityName == null)
 				throw new ArgumentException();
 
-			return entityName.EntityName;
+			return entityName.Name;
 		}
 
 		private static string ModuleName<T>() {
@@ -141,6 +146,13 @@ namespace Deveel.Web.Zoho {
 			request.AddParameter("method", method, ParameterType.UrlSegment);
 			request.AddParameter("authtoken", authToken);
 			request.AddParameter("scope", "crmapi");
+			if (method == "insertRecords") {
+				if (DuplicateCheck != InsertDuplicateCheck.None)
+					request.AddParameter("duplicateCheck", (int) DuplicateCheck);
+				if (InsertApproval != null)
+					request.AddParameter("isApproval", InsertApproval.Value);
+			}
+
 			if (parameters != null) {
 				foreach (var parameter in parameters) {
 					request.AddParameter(parameter.Key, parameter.Value);

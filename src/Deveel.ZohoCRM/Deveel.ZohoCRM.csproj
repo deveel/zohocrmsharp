@@ -49,10 +49,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Deveel.Web.Zoho\AccountDefaultFields.cs" />
     <Compile Include="Deveel.Web.Zoho\AllowInsertsAttribute.cs" />
     <Compile Include="Deveel.Web.Zoho\AllowMultipleInsertsAttribute.cs" />
     <Compile Include="Deveel.Web.Zoho\ConditionOperator.cs" />
+    <Compile Include="Deveel.Web.Zoho\ContactDefaultFields.cs" />
     <Compile Include="Deveel.Web.Zoho\DownloadFile.cs" />
+    <Compile Include="Deveel.Web.Zoho\InsertDuplicateCheck.cs" />
     <Compile Include="Deveel.Web.Zoho\ModuleNameAttribute.cs" />
     <Compile Include="Deveel.Web.Zoho\FieldType.cs" />
     <Compile Include="Deveel.Web.Zoho\InsertRecodDetail.cs" />

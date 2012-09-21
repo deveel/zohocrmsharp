@@ -20,122 +20,127 @@ namespace Deveel.Web.Zoho {
 		}
 
 		protected override string IdFieldName {
-			get { return "CONTACTID"; }
+			get { return ContactDefaultFields.ContactId; }
 		}
 
 		public string FirstName {
-			get { return GetString("First Name"); }
-			set { SetValue("First Name", value); }
+			get { return GetString(ContactDefaultFields.FirstName); }
+			set { SetValue(ContactDefaultFields.FirstName, value); }
 		}
 
 		public string LastName {
-			get { return GetString("Last Name"); }
-			set { SetValue("Last Name", value); }
+			get { return GetString(ContactDefaultFields.LastName); }
+			set { SetValue(ContactDefaultFields.LastName, value); }
 		}
 
 		public string Email {
-			get { return GetString("Email"); }
-			private set { SetValue("Email", value); }
+			get { return GetString(ContactDefaultFields.Email); }
+			private set { SetValue(ContactDefaultFields.Email, value); }
 		}
 
 		public string AccountName {
-			get { return GetString("Account Name"); }
-			set { SetValue("Account Name", value); }
+			get { return GetString(ContactDefaultFields.AccountName); }
+			set { SetValue(ContactDefaultFields.AccountName, value); }
 		}
 
 		public bool EmailOptOut {
-			get { return GetBoolean("Email Opt Out"); }
-			set { SetValue("Email Opt Out", value); }
+			get { return GetBoolean(ContactDefaultFields.EmailOptOut); }
+			set { SetValue(ContactDefaultFields.EmailOptOut, value); }
 		}
 
 		public string Phone {
-			get { return GetString("Phone"); }
-			set { SetValue("Phone", value); }
+			get { return GetString(ContactDefaultFields.Phone); }
+			set { SetValue(ContactDefaultFields.Phone, value); }
 		}
 
 		public string HomePhone {
-			get { return GetString("Home Phone"); }
-			set { SetValue("Home Phone", value); }
+			get { return GetString(ContactDefaultFields.HomePhone); }
+			set { SetValue(ContactDefaultFields.HomePhone, value); }
 		}
 
 		public string Mobile {
-			get { return GetString("Mobile"); }
-			set { SetValue("Mobile", value); }
+			get { return GetString(ContactDefaultFields.Mobile); }
+			set { SetValue(ContactDefaultFields.Mobile, value); }
 		}
 
 		public string Assistant {
-			get { return GetString("Assistant"); }
-			set { SetValue("Assistant", value); }
+			get { return GetString(ContactDefaultFields.Assistant); }
+			set { SetValue(ContactDefaultFields.Assistant, value); }
 		}
 
 		public string AssistantPhone {
-			get { return GetString("Asst Phone"); }
-			set { SetValue("Asst Phone", value); }
+			get { return GetString(ContactDefaultFields.AssistantPhone); }
+			set { SetValue(ContactDefaultFields.AssistantPhone, value); }
 		}
 
 		public string Owner {
-			get { return GetString("Contact Owner"); }
-			set { SetValue("Contact Owner", value); }
+			get { return GetString(ContactDefaultFields.ContactOwner); }
+			set { SetValue(ContactDefaultFields.ContactOwner, value); }
 		}
 
-		public DateTime BirthDate {
-			get { return GetDateTime("Date of Birth"); }
-			set { SetValue("Date of Birth", value); }
+		public DateTime DateOfBirth {
+			get { return GetDateTime(ContactDefaultFields.DateOfBirth); }
+			set { SetValue(ContactDefaultFields.DateOfBirth, value); }
 		}
 
 		public string Department {
-			get { return GetString("Department"); }
-			set { SetValue("Department", value); }
+			get { return GetString(ContactDefaultFields.Department); }
+			set { SetValue(ContactDefaultFields.Department, value); }
 		}
 
 		public string Description {
-			get { return GetString("Description"); }
-			set { SetValue("Description", value); }
+			get { return GetString(ContactDefaultFields.Description); }
+			set { SetValue(ContactDefaultFields.Description, value); }
 		}
 
 		public string ReportsTo {
-			get { return GetString("Reports To"); }
-			set { SetValue("Reports To", value); }
+			get { return GetString(ContactDefaultFields.ReportsTo); }
+			set { SetValue(ContactDefaultFields.ReportsTo, value); }
 		}
 
 		public string LeadSource {
-			get { return GetString("Lead Source"); }
-			set { SetValue("Lead Source", value); }
+			get { return GetString(ContactDefaultFields.LeadSource); }
+			set { SetValue(ContactDefaultFields.LeadSource, value); }
 		}
 
 		public string VendorName {
-			get { return GetString("Vendor Name"); }
-			set { SetValue("Vendor Name", value); }
+			get { return GetString(ContactDefaultFields.VendorName); }
+			set { SetValue(ContactDefaultFields.VendorName, value); }
 		}
 
 		public string Salutation {
-			get { return GetString("Salutation"); }
-			set { SetValue("Salutation", value); }
+			get { return GetString(ContactDefaultFields.Salutation); }
+			set { SetValue(ContactDefaultFields.Salutation, value); }
 		}
 
 		public string Title {
-			get { return GetString("Title"); }
-			set { SetValue("Title", value); }
+			get { return GetString(ContactDefaultFields.Title); }
+			set { SetValue(ContactDefaultFields.Title, value); }
 		}
 
 		public string MailingCity {
-			get { return GetString("Mailing City"); }
-			set { SetValue("Mailing City", value); }
+			get { return GetString(ContactDefaultFields.MailingCity); }
+			set { SetValue(ContactDefaultFields.MailingCity, value); }
 		}
 
-		public string MailingCuntry {
-			get { return GetString("MailingCountry"); }
-			set { SetValue("Mailing Country", value); }
+		public string MailingCountry {
+			get { return GetString(ContactDefaultFields.MailingCountry); }
+			set { SetValue(ContactDefaultFields.MailingCountry, value); }
 		}
 
 		public string MailingState {
-			get { return GetString("Mailing State"); }
-			set { SetValue("Mailing State", value); }
+			get { return GetString(ContactDefaultFields.MailingState); }
+			set { SetValue(ContactDefaultFields.MailingState, value); }
 		}
 
 		public string MailingStreet {
-			get { return GetString("Mailing Street"); }
-			set { SetValue("Mailing Street", value); }
+			get { return GetString(ContactDefaultFields.MailingStreet); }
+			set { SetValue(ContactDefaultFields.MailingStreet, value); }
+		}
+
+		public string MialingCode {
+			get { return GetString(ContactDefaultFields.MailingCode); }
+			set { SetValue(ContactDefaultFields.MailingCode, value);}
 		}
 	}
 }

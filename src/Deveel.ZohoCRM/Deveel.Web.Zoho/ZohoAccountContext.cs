@@ -32,7 +32,11 @@ namespace Deveel.Web.Zoho {
 			if (account == null)
 				throw new ArgumentNullException("account");
 
-			account.ParentAccount = RequireById(id).Name;
+			// this issues a call to the service...
+			// account.ParentAccount = RequireById(id).Name;
+			// instead, this is faster and lighter, but not it doesn't check 
+			// for the parent account to exist ...
+			account.SetValue("SMOWNERID", id);
 			return Client.InsertRecord(account);
 		}
 
@@ -40,7 +44,11 @@ namespace Deveel.Web.Zoho {
 			if (account == null)
 				throw new ArgumentNullException("account");
 
-			account.ParentAccount = RequireById(id).Name;
+			// this issues a call to the service...
+			// account.ParentAccount = RequireById(id).Name;
+			// instead, this is faster and lighter, but not it doesn't check 
+			// for the parent account to exist ...
+			account.SetValue("SMOWNERID", id);
 			return Update(account);
 		}
 
@@ -64,7 +72,11 @@ namespace Deveel.Web.Zoho {
 			if (contact == null)
 				throw new ArgumentNullException("contact");
 
-			contact.AccountName = RequireById(id).Name;
+			// this issues a call to the service...
+			// account.ParentAccount = RequireById(id).Name;
+			// instead, this is faster and lighter, but not it doesn't check 
+			// for the parent account to exist ...
+			contact.SetValue("ACCOUNTID", id);
 			return Client.InsertRecord(contact);
 		}
 
@@ -72,7 +84,11 @@ namespace Deveel.Web.Zoho {
 			if (contact == null)
 				throw new ArgumentNullException("contact");
 
-			contact.AccountName = RequireById(id).Name;
+			// this issues a call to the service...
+			// account.ParentAccount = RequireById(id).Name;
+			// instead, this is faster and lighter, but not it doesn't check 
+			// for the parent account to exist ...
+			contact.SetValue("ACCOUNTID", id);
 			return Client.UpdateRecord(contact);
 		}
 	}

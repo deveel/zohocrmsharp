@@ -18,8 +18,8 @@ namespace Deveel.Web.Zoho {
 		}
 
 		public string Name {
-			get { return GetString("Name"); }
-			private set { SetValue("Name", value); }
+			get { return GetString("Product Name"); }
+			private set { SetValue("Product Name", value); }
 		}
 
 		public string Currency {

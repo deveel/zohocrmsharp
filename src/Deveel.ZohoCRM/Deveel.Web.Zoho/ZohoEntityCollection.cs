@@ -23,7 +23,7 @@ namespace Deveel.Web.Zoho {
 			if (entityName == null)
 				throw new InvalidOperationException();
 
-			EntityName = entityName.EntityName;
+			EntityName = entityName.Name;
 			IsReadOnly = readOnly;
 			this.collection = collection;
 		}

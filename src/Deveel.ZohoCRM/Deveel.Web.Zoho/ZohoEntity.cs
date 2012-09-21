@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
@@ -14,11 +15,11 @@ namespace Deveel.Web.Zoho {
 		private const string CreatorIdFieldName = "SMCREATORID";
 
 		protected ZohoEntity() {
-			var entityName = Attribute.GetCustomAttribute(GetType(), typeof (ModuleNameAttribute)) as ModuleNameAttribute;
-			if (entityName == null)
-				throw new InvalidOperationException();
+			var moduleNameAttribute = Attribute.GetCustomAttribute(GetType(), typeof (ModuleNameAttribute)) as ModuleNameAttribute;
+			if (moduleNameAttribute == null)
+				throw new InvalidOperationException("Entity " + GetType() + " has nt defined any module name.");
 
-			EntityName = entityName.EntityName;
+			EntityName = moduleNameAttribute.Name;
 		}
 
 		protected ZohoEntity(SerializationInfo info, StreamingContext context) {
@@ -70,7 +71,8 @@ namespace Deveel.Web.Zoho {
 		public void SetValue<T>(string fieldName, T value) {
 			if (Equals(default(T), value)) {
 				fields.Remove(fieldName);
-			} else if (!typeof (T).IsPrimitive) {
+			} else if (!typeof (T).IsPrimitive &&
+				typeof(T) != typeof(decimal)) {
 				fields[fieldName] = value.ToString();
 			} else {
 				fields[fieldName] = value;
@@ -238,13 +240,26 @@ namespace Deveel.Web.Zoho {
 					idFieldName.Equals(fieldName))
 					continue;
 
-				if (fieldName.Equals(OwnerIdFieldName) ||
-					fieldName.Equals(CreatorIdFieldName))
+				if (fieldName.Equals(CreatorIdFieldName))
+					continue;
+
+				var value = field.Value;
+				if (value == null)
 					continue;
 
 				var fieldElement = new XElement("FL");
 				fieldElement.SetAttributeValue("val", field.Key);
-				fieldElement.Add(field.Value);
+
+				if (!(value is string)) {
+					value = Convert.ToString(value, CultureInfo.InvariantCulture);
+					fieldElement.Add(value);
+				} else {
+					// for the moment we always use CDATA to avoid errors given by
+					// invalid XML strings... in a later version we'll map this against
+					// the field type ...
+					fieldElement.Add(new XCData((string)value));
+				}
+
 				rowElement.Add(fieldElement);
 			}			
 		}

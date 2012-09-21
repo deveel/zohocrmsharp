@@ -14,107 +14,107 @@ namespace Deveel.Web.Zoho {
 		}
 
 		protected override string IdFieldName {
-			get { return "ACCOUNTID"; }
+			get { return AccountDefaultFields.AccountId; }
 		}
 
 		public string Name {
-			get { return GetString("Account Name"); }
-			private set { SetValue("Account Name", value); }
+			get { return GetString(AccountDefaultFields.AccountName); }
+			private set { SetValue(AccountDefaultFields.AccountName, value); }
 		}
 
 		public string Number {
-			get { return GetString("Account Number"); }
-			set { SetValue("Account Number", value); }
+			get { return GetString(AccountDefaultFields.AccountNumber); }
+			set { SetValue(AccountDefaultFields.AccountNumber, value); }
 		}
 
 		public string Owner {
-			get { return GetString("Account Owner"); }
-			set { SetValue("Account Owner", value); }
+			get { return GetString(AccountDefaultFields.AccountOwner); }
+			set { SetValue(AccountDefaultFields.AccountOwner, value); }
 		}
 
 		public string ParentAccount {
-			get { return GetString("Parent Account"); }
-			set { SetValue("Parent Account", value); }
+			get { return GetString(AccountDefaultFields.ParentAccount); }
+			set { SetValue(AccountDefaultFields.ParentAccount, value); }
 		}
 
 		public string Type {
-			get { return GetString("Account Type"); }
-			set { SetValue("Account Type", value); }
+			get { return GetString(AccountDefaultFields.AccountType); }
+			set { SetValue(AccountDefaultFields.AccountType, value); }
 		}
 
 		public string Site {
-			get { return GetString("Account Site"); }
-			set { SetValue("Account Site", value); }
+			get { return GetString(AccountDefaultFields.AccountSite); }
+			set { SetValue(AccountDefaultFields.AccountSite, value); }
 		}
 
 		public string PhoneNumber {
-			get { return GetString("Phone"); }
-			set { SetValue("Phone", value); }
+			get { return GetString(AccountDefaultFields.Phone); }
+			set { SetValue(AccountDefaultFields.Phone, value); }
 		}
 
 		public string BillingStreet {
-			get { return GetString("Billing Street"); }
-			set { SetValue("Billing Street", value); }
+			get { return GetString(AccountDefaultFields.BillingStreet); }
+			set { SetValue(AccountDefaultFields.BillingStreet, value); }
 		}
 
 		public string BillingCity {
-			get { return GetString("Billing City"); }
-			set { SetValue("Billing City", value); }
+			get { return GetString(AccountDefaultFields.BillingCity); }
+			set { SetValue(AccountDefaultFields.BillingCity, value); }
 		}
 
 		public string BillingState {
-			get { return GetString("Billing State"); }
-			set { SetValue("Billing State", value); }
+			get { return GetString(AccountDefaultFields.BillingState); }
+			set { SetValue(AccountDefaultFields.BillingState, value); }
 		}
 
 		public string BillingCountry {
-			get { return GetString("Billing Country"); }
-			set { SetValue("Billing Country", value); }
+			get { return GetString(AccountDefaultFields.BillingCountry); }
+			set { SetValue(AccountDefaultFields.BillingCountry, value); }
 		}
 
 		public string BillingZipCode {
-			get { return GetString("Billing Code"); }
-			set { SetValue("Billing Code", value); }
+			get { return GetString(AccountDefaultFields.BillingCode); }
+			set { SetValue(AccountDefaultFields.BillingCode, value); }
 		}
 
 		public string ShippingStreet {
-			get { return GetString("Shipping Street"); }
-			set { SetValue("Shipping Street", value); }
+			get { return GetString(AccountDefaultFields.ShippingStreet); }
+			set { SetValue(AccountDefaultFields.ShippingStreet, value); }
 		}
 
 		public string ShippingCity {
-			get { return GetString("Shipping City"); }
-			set { SetValue("Shipping City", value); }
+			get { return GetString(AccountDefaultFields.ShippingCity); }
+			set { SetValue(AccountDefaultFields.ShippingCity, value); }
 		}
 
 		public string ShippingState {
-			get { return GetString("Shipping State"); }
-			set { SetValue("Shipping State", value); }
+			get { return GetString(AccountDefaultFields.BillingState); }
+			set { SetValue(AccountDefaultFields.BillingState, value); }
 		}
 
 		public string ShippingCountry {
-			get { return GetString("Shipping Country"); }
-			set { SetValue("Shipping Country", value); }
+			get { return GetString(AccountDefaultFields.ShippingCountry); }
+			set { SetValue(AccountDefaultFields.ShippingCountry, value); }
 		}
 
 		public string ShippingZipCode {
-			get { return GetString("Shipping Code"); }
-			set { SetValue("Shipping Code", value); }
+			get { return GetString(AccountDefaultFields.ShippingCode); }
+			set { SetValue(AccountDefaultFields.ShippingCode, value); }
 		}
 
 		public int Employees {
-			get { return GetInt32("Employees"); }
-			set { SetValue("Employees", value); }
+			get { return GetInt32(AccountDefaultFields.Emplyees); }
+			set { SetValue(AccountDefaultFields.Emplyees, value); }
 		}
 
 		public string Ownership {
-			get { return GetString("Ownership"); }
-			set { SetValue("Ownership", value); }
+			get { return GetString(AccountDefaultFields.Ownership); }
+			set { SetValue(AccountDefaultFields.Ownership, value); }
 		}
 
 		public string Website {
-			get { return GetString("Website"); }
-			set { SetValue("Website", value); }
+			get { return GetString(AccountDefaultFields.Website); }
+			set { SetValue(AccountDefaultFields.Website, value); }
 		}
 	}
 }

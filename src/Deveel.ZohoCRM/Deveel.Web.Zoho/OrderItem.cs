@@ -3,14 +3,26 @@ using System.Xml.Linq;
 
 namespace Deveel.Web.Zoho {
 	[AllowInserts(false)]
+	[ModuleName("OrderItemProducts")]
 	public sealed class OrderItem : ZohoEntity {
 		public OrderItem(string productId, decimal unitPrice, int quantity) {
 			if (productId == null)
 				throw new ArgumentNullException("productId");
 
+			if (quantity < 0)
+				quantity = 0;
+			if (unitPrice < 0)
+				unitPrice = 0;
+
 			ProductId = productId;
 			UnitPrice = unitPrice;
 			Quantity = quantity;
+
+			// by default we set the list-price equal to the unit price
+			ListPrice = unitPrice;
+
+			// by default we calculate the total simply multiplying
+			Total = unitPrice*quantity;
 		}
 
 		internal OrderItem() {
@@ -23,12 +35,12 @@ namespace Deveel.Web.Zoho {
 
 		public decimal UnitPrice {
 			get { return GetDecimal("Unit Price"); }
-			set { SetValue("Unit Price", value); }
+			private set { SetValue("Unit Price", value); }
 		}
 
 		public int Quantity {
 			get { return GetInt32("Quantity"); }
-			set { SetValue("Quantity", value); }
+			private set { SetValue("Quantity", value); }
 		}
 
 		// TODO: make this a readonly?
@@ -64,6 +76,7 @@ namespace Deveel.Web.Zoho {
 			productElement.SetAttributeValue("no", prodNum);
 
 			AppendFieldsToRow(productElement);
+			parent.Add(productElement);
 		}
 
 		internal override void LoadFromXml(XElement element) {
