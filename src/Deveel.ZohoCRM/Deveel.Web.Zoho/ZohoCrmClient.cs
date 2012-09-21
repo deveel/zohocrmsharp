@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -11,7 +10,7 @@ using System.Xml.Linq;
 using RestSharp;
 
 namespace Deveel.Web.Zoho {
-	public sealed class ZohoCrmClient {
+	public sealed partial class ZohoCrmClient {
 		private readonly string authToken;
 
 		private const string BaseUrl = "https://crm.zoho.com/crm/private/xml/";
@@ -28,10 +27,10 @@ namespace Deveel.Web.Zoho {
 				throw new ArgumentException("Abstract types cannot be used for this function");
 		}
 
-		private static void AssertAllowMultipleInserts<T>(Type type, ICollection<T> records) {
+		private static void AssertAllowMultipleInserts<T>(Type type, IEnumerable<T> records) {
 			var attr = Attribute.GetCustomAttribute(type, typeof (AllowMultipleInsertsAttribute)) as AllowMultipleInsertsAttribute;
 			if (attr != null && 
-			    (!attr.Allow && records.Count > 1))
+			    (!attr.Allow && records.Count() > 1))
 				throw new ArgumentException("Entity " + type.Name + " cannot be inserted more than one record at a time.");
 		}
 
@@ -42,7 +41,7 @@ namespace Deveel.Web.Zoho {
 		}
 
 		private static string ModuleName(Type entityType) {
-			var entityName = Attribute.GetCustomAttribute(entityType, typeof(EntityNameAttribute)) as EntityNameAttribute;
+			var entityName = Attribute.GetCustomAttribute(entityType, typeof(ModuleNameAttribute)) as ModuleNameAttribute;
 			if (entityName == null)
 				throw new ArgumentException();
 
@@ -90,9 +89,9 @@ namespace Deveel.Web.Zoho {
 			return parameters;			
 		}
 
-		private ZohoEntityCollection<T> GetEntities<T>(string module, string method, IEnumerable<KeyValuePair<string, string>> parameters) where T : ZohoEntity {
+		private string GetData(string module, string method, IEnumerable<KeyValuePair<string, string>> parameters) {
 			var client = new RestClient(BaseUrl);
-			var request = new RestRequest(Method.POST);
+			var request = new RestRequest(Method.GET);
 			request.Resource = "{module}/{method}";
 			request.AddParameter("module", module, ParameterType.UrlSegment);
 			request.AddParameter("method", method, ParameterType.UrlSegment);
@@ -106,7 +105,18 @@ namespace Deveel.Web.Zoho {
 			if (response.StatusCode != HttpStatusCode.OK)
 				throw response.ErrorException;
 
-			var doc = XDocument.Parse(response.Content);
+			return response.Content;
+		}
+
+		private ZohoResponse GetResponse(string module, string method, IEnumerable<KeyValuePair<string, string>> parameters) {
+			var content = GetData(module, method, parameters);
+			return new ZohoResponse(module, method, content);
+		}
+
+		private ZohoEntityCollection<T> GetEntities<T>(string module, string method, IEnumerable<KeyValuePair<string, string>> parameters) where T : ZohoEntity {
+			var response = GetData(module, method, parameters);
+
+			var doc = XDocument.Parse(response);
 			var root = doc.Root;
 			if (root.Name == "response")
 				root = root.Descendants().First();
@@ -118,7 +128,7 @@ namespace Deveel.Web.Zoho {
 			return collection.AsReadOnly();
 		}
 
-		private XDocument PostData(string module, string method, IDictionary<string, string> parameters, string xmlData) {
+		private ZohoInsertResponse PostData(string module, string method, IDictionary<string, string> parameters, string xmlData) {
 			if (module == null)
 				throw new ArgumentNullException("module");
 			if (method == null)
@@ -144,29 +154,7 @@ namespace Deveel.Web.Zoho {
 			if (response.StatusCode != HttpStatusCode.OK)
 				throw response.ErrorException;
 
-			return XDocument.Parse(response.Content);
-		}
-
-		private ZohoInsertResponse PostFile(string module, string id, byte[] bytes, string fileName, string contentType) {
-			if (module == null)
-				throw new ArgumentNullException("module");
-
-			var client = new RestClient(BaseUrl);
-			var request = new RestRequest(Method.POST);
-			request.Resource = "{module}/uploadFile?authtoken={authtoken}&scope={scope}&id={id}";
-			request.AddParameter("module", module, ParameterType.UrlSegment);
-			request.AddParameter("authtoken", authToken, ParameterType.UrlSegment);
-			request.AddParameter("scope", "crmapi", ParameterType.UrlSegment);
-			request.AddParameter("id", id, ParameterType.UrlSegment);
-			request.AddFile("content", bytes, fileName, contentType);
-			request.Timeout = 5000;
-
-			var response = client.Execute(request);
-			if (response.StatusCode != HttpStatusCode.OK)
-				throw response.ErrorException;
-
-			var xmlResponse = XDocument.Parse(response.Content);
-			return new ZohoInsertResponse(module, "uploadFile", xmlResponse);
+			return new ZohoInsertResponse(module, method, response.Content);
 		}
 
 		private ZohoEntityCollection<T> Search<T>(string module, IEnumerable<string> selectColumns, ZohoSearchCondition searchCondition) where T : ZohoEntity {
@@ -187,7 +175,7 @@ namespace Deveel.Web.Zoho {
 			return Search<T>(new ZohoSearchCondition(column, @operator, value));
 		}
 
-		public ZohoInsertResponse InsertRecords<T>(ICollection<T> records) where T : ZohoEntity {
+		public ZohoInsertResponse InsertRecords<T>(IEnumerable<T> records) where T : ZohoEntity {
 			AssertTypeIsNotAbstract(typeof (T));
 			AssertAllowInserts(typeof (T));
 			AssertAllowMultipleInserts(typeof (T), records);
@@ -204,9 +192,7 @@ namespace Deveel.Web.Zoho {
 
 			var moduleName = ModuleName(typeof (T));
 			var xmlData = collection.ToXmlString();
-			var response = PostData(moduleName, "insertRecords", null, xmlData);
-
-			return new ZohoInsertResponse(moduleName, "insertRecords", response);
+			return PostData(moduleName, "insertRecords", null, xmlData);
 		}
 
 		public ZohoInsertResponse InsertRecord<T>(T record) where T : ZohoEntity {
@@ -233,7 +219,7 @@ namespace Deveel.Web.Zoho {
 			return GetEntities<T>(moduleName, "getMyRecords", GetListOptionsParameters(moduleName, options));			
 		}
 
-		public RecordDetail UpdateRecord<T>(T record) where T : ZohoEntity {
+		public bool UpdateRecord<T>(T record) where T : ZohoEntity {
 			if (record == null)
 				throw new ArgumentNullException("record");
 
@@ -244,20 +230,40 @@ namespace Deveel.Web.Zoho {
 			return UpdateRecord(id, record);
 		}
 
-		public RecordDetail UpdateRecord<T>(string id, T record) where T : ZohoEntity {
+		public ZohoEntityCollection<TRelated> GetRelatedRecordsTo<TSource, TRelated>(string id) where TSource : ZohoEntity where TRelated : ZohoEntity {
+			return GetRelatedRecordsTo<TSource, TRelated>(id, null);
+		}
+
+		public ZohoEntityCollection<TRelated> GetRelatedRecordsTo<TSource, TRelated>(string id, int? toIndex) where TSource : ZohoEntity where TRelated : ZohoEntity {
+			return GetRelatedRecordsTo<TSource, TRelated>(id, null, toIndex);
+		}
+
+		public ZohoEntityCollection<TRelated> GetRelatedRecordsTo<TSource, TRelated>(string id, int? fromIndex, int? toIndex) where TSource : ZohoEntity where TRelated : ZohoEntity {
+			var parentModuleName = ModuleName<TSource>();
+			var paremeters = GetListOptionsParameters(null, new ListOptions {FromIndex = fromIndex, ToIndex = toIndex});
+			paremeters.Add("parentModule", parentModuleName);
+			paremeters.Add("id", id);
+
+			return GetEntities<TRelated>(ModuleName<TRelated>(), "getRelatedRecords", paremeters);
+		}
+
+		public ZohoEntityCollection<ZohoAttachment> GetRecordAttachments<T>(string id) where T : ZohoEntity {
+			return GetRelatedRecordsTo<T, ZohoAttachment>(id, null, null);
+		}
+
+		public bool UpdateRecord<T>(string id, T record) where T : ZohoEntity {
 			AssertTypeIsNotAbstract(typeof(T));
 			AssertAllowInserts(typeof(T));
 
 			var collection = new ZohoEntityCollection<T> {record};
 			var moduleName = ModuleName(typeof(T));
 			var xmlData = collection.ToXmlString();
-			var xmlResponse = PostData(moduleName, "updateRecords", new Dictionary<string, string> {{"id", id}}, xmlData);
-
-			var response = new ZohoInsertResponse(moduleName, "updateRecords", xmlResponse);
+			var response = PostData(moduleName, "updateRecords", new Dictionary<string, string> {{"id", id}}, xmlData);
 			if (response.RecordDetails.Count() != 1)
 				throw new InvalidOperationException("Invalid number of details returned");
 
-			return response.RecordDetails.First();
+			var detail = response.RecordDetails.First();
+			return detail.Id == id;
 		}
 
 		public bool DeleteRecord<T>(T record) where T : ZohoEntity {
@@ -276,72 +282,12 @@ namespace Deveel.Web.Zoho {
 			AssertAllowInserts(typeof(T));
 
 			var moduleName = ModuleName(typeof(T));
-			var xmlResponse = PostData(moduleName, "deleteRecords", new Dictionary<string, string> { { "id", id } }, null);
-
-			var response = new ZohoResponse(moduleName, "deleteRecords");
-			response.LoadFromXml(xmlResponse.Root);
-
+			var response = GetResponse(moduleName, "deleteRecords", new Dictionary<string, string> { { "id", id } });
 			return response.Code == "5000";
 		}
 
-		public string UploadFileToRecord<T>(string id, string fileName, string contentType, Stream inputStream) where  T :ZohoEntity{
-			if (inputStream == null)
-				throw new ArgumentNullException("inputStream");
-
-			var bytes = ReadFromStream(inputStream);
-			return UploadFileToRecord<T>(id, fileName, contentType, bytes);
-		}
-
-		public string UploadFileToRecord<T>(string id, string fileName, string contentType, byte[] content) where T : ZohoEntity {
-			if (content == null)
-				throw new ArgumentNullException("content");
-
-			var response = PostFile(ModuleName<T>(), id, content, fileName, contentType);
-			if (response.IsError)
-				throw new InvalidOperationException("An error occurred while uploading the file");
-
-			return response.RecordDetails.First().Id;
-		}
-
-		public string UploadFileToRecord<T>(string recordId, string fileName, string contentType, Uri uri) where T : ZohoEntity {
-			byte[] bytes;
-
-			using (var client = new WebClient()) {
-				var inputStream = client.OpenRead(uri);
-				if (inputStream == null)
-					throw new FileNotFoundException("The uri specified returned no file.");
-
-				bytes = ReadFromStream(inputStream);
-			}
-
-			return UploadFileToRecord<T>(recordId, fileName, contentType, bytes);
-		}
-
-		public string UploadFileToRecord<T>(string recordId, string fileName, string contentType, string filePath) where T : ZohoEntity {
-			if (!File.Exists(filePath))
-				throw new ArgumentException("File specified was not found in the system.");
-
-			byte[] bytes;
-			using (var inputStream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-				bytes = ReadFromStream(inputStream);
-			}
-
-			return UploadFileToRecord<T>(recordId, fileName, contentType, bytes);
-		}
-
-		private static byte[] ReadFromStream(Stream inputStream) {
-			if (!inputStream.CanRead)
-				throw new ArgumentException("The given stream cannot read");
-
-			var memoryStream = new MemoryStream();
-			int readCount;
-			byte[] readBuffer = new byte[1024];
-			while ((readCount = inputStream.Read(readBuffer, 0, readBuffer.Length)) != 0) {
-				memoryStream.Write(readBuffer, 0, readCount);
-			}
-
-			memoryStream.Flush();
-			return memoryStream.ToArray();			
+		public ZohoEntityContext<T> GetContext<T>() where T : ZohoEntity {
+			return new ZohoEntityContext<T>(this);
 		}
 	}
 }

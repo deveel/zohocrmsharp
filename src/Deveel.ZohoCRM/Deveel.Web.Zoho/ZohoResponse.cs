@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace Deveel.Web.Zoho {
 	public class ZohoResponse {
-		internal ZohoResponse(string module, string method) {
+		internal ZohoResponse(string module, string method, string responseContent) {
 			if (module == null)
 				throw new ArgumentNullException("module");
 			if (method == null)
@@ -12,6 +12,10 @@ namespace Deveel.Web.Zoho {
 
 			Method = method;
 			Module = module;
+			ResponseContent = responseContent;
+
+			var doc = XDocument.Parse(responseContent);
+			LoadFromXml(doc.Root);
 		}
 
 		public string Module { get; private set; }
@@ -23,6 +27,17 @@ namespace Deveel.Web.Zoho {
 		public string Message { get; private set; }
 
 		public string Code { get; private set; }
+
+		internal string ResponseContent { get; private set; }
+
+		public ZohoResponseException Error {
+			get { return !IsError ? null : new ZohoResponseException(this); }
+		}
+
+		public void ThrowIfError() {
+			if (IsError)
+				throw Error;
+		}
 
 		internal void LoadFromXml(XElement parent) {
 			if (parent.Name != "response")

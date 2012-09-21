@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Deveel.Web.Zoho {
-	[EntityName("Leads")]
+	[ModuleName("Leads")]
 	public sealed class ZohoLead : ZohoEntity {
 		public ZohoLead(string firstName, string lastName, string emailAddress) {
 			if (firstName == null)
@@ -17,6 +17,10 @@ namespace Deveel.Web.Zoho {
 		}
 
 		internal ZohoLead() {
+		}
+
+		protected override string IdFieldName {
+			get { return "LEADID"; }
 		}
 
 		public string FirstName {

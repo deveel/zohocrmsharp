@@ -14,7 +14,7 @@ namespace Deveel.Web.Zoho {
 		private const string CreatorIdFieldName = "SMCREATORID";
 
 		protected ZohoEntity() {
-			var entityName = Attribute.GetCustomAttribute(GetType(), typeof (EntityNameAttribute)) as EntityNameAttribute;
+			var entityName = Attribute.GetCustomAttribute(GetType(), typeof (ModuleNameAttribute)) as ModuleNameAttribute;
 			if (entityName == null)
 				throw new InvalidOperationException();
 

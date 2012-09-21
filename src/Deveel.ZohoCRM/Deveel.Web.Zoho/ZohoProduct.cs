@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Deveel.Web.Zoho {
-	[EntityName("Products")]
+	[ModuleName("Products")]
 	public sealed class ZohoProduct : ZohoEntity {
 		public ZohoProduct(string name) {
 			if (name == null)

@@ -6,9 +6,8 @@ namespace Deveel.Web.Zoho {
 	public sealed class ZohoInsertResponse : ZohoResponse {
 		private readonly List<RecordDetail> details = new List<RecordDetail>();
 
-		internal ZohoInsertResponse(string module, string method, XDocument doc)
-			: base(module, method) {
-			LoadFromXml(doc.Root);
+		internal ZohoInsertResponse(string module, string method, string content)
+			: base(module, method, content) {
 		}
 
 		public IEnumerable<RecordDetail> RecordDetails {

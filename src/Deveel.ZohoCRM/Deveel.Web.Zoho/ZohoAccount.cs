@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Deveel.Web.Zoho {
-	[EntityName("Accounts")]
+	[ModuleName("Accounts")]
 	public sealed class ZohoAccount : ZohoEntity {
 		internal ZohoAccount() {
 		}

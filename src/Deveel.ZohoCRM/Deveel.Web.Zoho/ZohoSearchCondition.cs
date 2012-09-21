@@ -66,7 +66,7 @@ namespace Deveel.Web.Zoho {
 				return "ends with";
 			if (@operator == ConditionOperator.GreaterThan)
 				return ">";
-			if (@operator == ConditionOperator.GreaterOrEqualsThan)
+			if (@operator == ConditionOperator.GreaterOrEqualThan)
 				return ">=";
 			if (@operator == ConditionOperator.LesserThan)
 				return "<";

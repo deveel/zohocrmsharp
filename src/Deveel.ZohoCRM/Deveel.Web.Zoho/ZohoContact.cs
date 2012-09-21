@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Deveel.Web.Zoho {
-	[EntityName("Contacts")]
+	[ModuleName("Contacts")]
 	public sealed class ZohoContact : ZohoEntity {
 		internal ZohoContact() {
 		}

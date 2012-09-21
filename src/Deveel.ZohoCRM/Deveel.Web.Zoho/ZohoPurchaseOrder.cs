@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Deveel.Web.Zoho {
-	[EntityName("PurchaseOrders")]
+	[ModuleName("PurchaseOrders")]
 	public sealed class ZohoPurchaseOrder : ZohoOrderBase {
 		public ZohoPurchaseOrder(string subject)
 			: base(subject) {

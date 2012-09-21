@@ -11,6 +11,6 @@
 		LesserThan,
 		GreaterThan,
 		LesserOrEqualsThan,
-		GreaterOrEqualsThan
+		GreaterOrEqualThan
 	}
 }
