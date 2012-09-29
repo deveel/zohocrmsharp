@@ -119,23 +119,8 @@ namespace Deveel.Web.Zoho {
 		}
 
 		private ZohoEntityCollection<T> GetEntities<T>(string module, string method, IEnumerable<KeyValuePair<string, string>> parameters) where T : ZohoEntity {
-			// var response = GetData(module, method, parameters);
 			var response = GetResponse(module, method, parameters);
 			response.ThrowIfError();
-
-			/*
-			var doc = XDocument.Parse(response.ResponseContent);
-			var root = doc.Root;
-			if (root.Name == "response")
-				root = root.Descendants().First();
-			if (root.Name == "result")
-				root = root.Descendants().First();
-
-			var collection = new ZohoEntityCollection<T>();
-			collection.LoadFromXml(root);
-			return collection.AsReadOnly();
-			*/
-
 			return response.LoadCollectionFromResul<T>();
 		}
 
@@ -306,6 +291,23 @@ namespace Deveel.Web.Zoho {
 
 		public ZohoEntityContext<T> GetContext<T>() where T : ZohoEntity {
 			return new ZohoEntityContext<T>(this);
+		}
+
+		public ZohoUsersResponse GetUsers(UserType userType) {
+			var parameters = new Dictionary<string, string> {{"type", userType.ToString()}};
+			var data = GetData("Users", "getUsers", parameters);
+			return new ZohoUsersResponse("Users", "getUsers", data);
+		}
+
+		public UserContext CreateUserContext(string userEmail) {
+			var response = GetUsers(UserType.ActiveUsers);
+			response.ThrowIfError();
+
+			var user = response.Users.SingleOrDefault(u => u.Email == userEmail);
+			if (user == null)
+				throw new InvalidOperationException("The user was not found or is not active.");
+
+			return new UserContext(this, user);
 		}
 	}
 }

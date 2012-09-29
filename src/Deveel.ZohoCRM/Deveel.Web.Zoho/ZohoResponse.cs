@@ -43,7 +43,7 @@ namespace Deveel.Web.Zoho {
 				throw Error;
 		}
 
-		internal void LoadFromXml(XElement parent) {
+		internal virtual void LoadFromXml(XElement parent) {
 			if (parent.Name != "response")
 				throw new FormatException();
 

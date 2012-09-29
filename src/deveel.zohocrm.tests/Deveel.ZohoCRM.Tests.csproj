@@ -48,6 +48,7 @@
     <Compile Include="Deveel.Web.Zoho\EntityContextTestBase.cs" />
     <Compile Include="Deveel.Web.Zoho\EntityTestBase.cs" />
     <Compile Include="Deveel.Web.Zoho\SalesOrderTest.cs" />
+    <Compile Include="Deveel.Web.Zoho\UsersTest.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoCrmTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

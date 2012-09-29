@@ -35,7 +35,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Deveel.ZohoCRM.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="RestSharp">
@@ -52,6 +53,8 @@
     <Compile Include="Deveel.Web.Zoho\AccountDefaultFields.cs" />
     <Compile Include="Deveel.Web.Zoho\AllowInsertsAttribute.cs" />
     <Compile Include="Deveel.Web.Zoho\AllowMultipleInsertsAttribute.cs" />
+    <Compile Include="Deveel.Web.Zoho\UserContext.cs" />
+    <Compile Include="Deveel.Web.Zoho\UserType.cs" />
     <Compile Include="Deveel.Web.Zoho\ConditionOperator.cs" />
     <Compile Include="Deveel.Web.Zoho\ContactDefaultFields.cs" />
     <Compile Include="Deveel.Web.Zoho\DownloadFile.cs" />
@@ -85,10 +88,11 @@
     <Compile Include="Deveel.Web.Zoho\ZohoResponseException.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoSalesOrder.cs" />
     <Compile Include="Deveel.Web.Zoho\ZohoSearchCondition.cs" />
+    <Compile Include="Deveel.Web.Zoho\ZohoUser.cs" />
+    <Compile Include="Deveel.Web.Zoho\ZohoUsersResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Deveel.ZohoCRM.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
