@@ -3,7 +3,11 @@
 namespace Deveel.Web.Zoho {
 	[ModuleName("Potentials")]
 	public sealed class ZohoPotential : ZohoEntity {
-		public ZohoPotential(string name) {
+        internal ZohoPotential(){
+        }
+        
+        public ZohoPotential(string name)
+        {
 			if (name == null)
 				throw new ArgumentNullException("name");
 
