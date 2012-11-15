@@ -10,6 +10,10 @@ namespace Deveel.Web.Zoho {
 		internal ZohoSalesOrder() {
 		}
 
+        protected override string IdFieldName {
+            get { return "SALESORDERID"; }
+        }
+
 		public string AccountName {
 			get { return GetString("Account Name"); }
 			set { SetValue("Account Name", value); }
