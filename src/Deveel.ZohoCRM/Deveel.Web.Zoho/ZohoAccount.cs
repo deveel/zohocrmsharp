@@ -88,8 +88,8 @@ namespace Deveel.Web.Zoho {
 		}
 
 		public string ShippingState {
-			get { return GetString(AccountDefaultFields.BillingState); }
-			set { SetValue(AccountDefaultFields.BillingState, value); }
+			get { return GetString(AccountDefaultFields.ShippingState); }
+			set { SetValue(AccountDefaultFields.ShippingState, value); }
 		}
 
 		public string ShippingCountry {
@@ -103,8 +103,8 @@ namespace Deveel.Web.Zoho {
 		}
 
 		public int Employees {
-			get { return GetInt32(AccountDefaultFields.Emplyees); }
-			set { SetValue(AccountDefaultFields.Emplyees, value); }
+			get { return GetInt32(AccountDefaultFields.Employees); }
+			set { SetValue(AccountDefaultFields.Employees, value); }
 		}
 
 		public string Ownership {
