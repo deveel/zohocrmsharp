@@ -27,7 +27,7 @@ namespace Deveel.Web.Zoho {
 		public const string MailingCountry = "Mailing Country";
 		public const string MailingState = "Mailing State";
 		public const string MailingStreet = "Mailing Street";
-		public const string MailingCode = "Mailing Code";
+		public const string MailingCode = "Mailing Zip";
 
 		public static readonly IEnumerable<string> All = new[] {
 			Email,
