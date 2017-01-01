@@ -138,7 +138,7 @@ namespace Deveel.Web.Zoho {
 			set { SetValue(ContactDefaultFields.MailingStreet, value); }
 		}
 
-		public string MialingCode {
+		public string MailingCode {
 			get { return GetString(ContactDefaultFields.MailingCode); }
 			set { SetValue(ContactDefaultFields.MailingCode, value);}
 		}
