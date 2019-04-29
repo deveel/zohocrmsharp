@@ -107,8 +107,11 @@ namespace Deveel.Web.Zoho {
 			}
 
 			var response = client.Execute(request);
-			if (response.StatusCode != HttpStatusCode.OK)
+            var uri = client.BuildUri(request);
+
+            if (response.StatusCode != HttpStatusCode.OK)
 				throw response.ErrorException;
+
 
 			return response.Content;
 		}
@@ -153,9 +156,14 @@ namespace Deveel.Web.Zoho {
 			if (!String.IsNullOrEmpty(xmlData))
 				request.AddParameter("xmlData", xmlData);
 
+
 			var response = client.Execute(request);
+            var uri = client.BuildUri(request);
+
 			if (response.StatusCode != HttpStatusCode.OK)
 				throw response.ErrorException;
+
+
 
 			return new ZohoInsertResponse(module, method, response.Content);
 		}
@@ -250,6 +258,26 @@ namespace Deveel.Web.Zoho {
 			return GetEntities<TRelated>(ModuleName<TRelated>(), "getRelatedRecords", paremeters);
 		}
 
+		public bool UpdateRelatedRecords<TSource, TRelated>(string id, TRelated record) where TSource : ZohoEntity where TRelated : ZohoEntity {
+            AssertTypeIsNotAbstract(typeof(TSource));
+            AssertTypeIsNotAbstract(typeof(TRelated));
+
+			var parentModuleName = ModuleName<TSource>();
+            var relatedModuleName = ModuleName(typeof(TRelated));
+			var parameters = new Dictionary<string, string>();
+			parameters.Add("id", id);
+			parameters.Add("relatedModule", relatedModuleName);
+
+
+            var collection = new ZohoEntityCollection<TRelated> { record };
+            var xmlData = collection.ToXmlString();
+            var response = PostData(parentModuleName, "updateRelatedRecords", parameters, xmlData);
+            if (response.IsError)
+                throw new InvalidOperationException("Error updating records");
+
+            return response.IsError;
+		}
+
 		public ZohoEntityCollection<ZohoAttachment> GetRecordAttachments<T>(string id) where T : ZohoEntity {
 			return GetRelatedRecordsTo<T, ZohoAttachment>(id, null, null);
 		}
@@ -309,5 +337,5 @@ namespace Deveel.Web.Zoho {
 
 			return new UserContext(this, user);
 		}
-	}
+    }
 }

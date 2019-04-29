@@ -4,10 +4,12 @@ using System.Collections.Generic;
 namespace Deveel.Web.Zoho {
 	public static class ContactDefaultFields {
 		public const string ContactId = "CONTACTID";
+		public const string ProductId = "PRODUCTID";
 		public const string Email = "Email";
 		public const string FirstName = "First Name";
 		public const string LastName = "Last Name";
 		public const string AccountName = "Account Name";
+		public const string AccountId = "ACCOUNTID";
 		public const string EmailOptOut = "Email Opt Out";
 		public const string Phone = "Phone";
 		public const string HomePhone = "Home Phone";
@@ -53,7 +55,8 @@ namespace Deveel.Web.Zoho {
 			MailingCountry,
 			MailingCode,
 			MailingStreet,
-			MailingState
+			MailingState,
+            ProductId
 		};
 	}
 }

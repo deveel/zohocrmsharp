@@ -23,6 +23,11 @@ namespace Deveel.Web.Zoho {
 			get { return ContactDefaultFields.ContactId; }
 		}
 
+		public string ProductId {
+			get { return ContactDefaultFields.ProductId; }
+			set { SetValue(ContactDefaultFields.ProductId, value); }
+		}
+
 		public string FirstName {
 			get { return GetString(ContactDefaultFields.FirstName); }
 			set { SetValue(ContactDefaultFields.FirstName, value); }
@@ -41,6 +46,11 @@ namespace Deveel.Web.Zoho {
 		public string AccountName {
 			get { return GetString(ContactDefaultFields.AccountName); }
 			set { SetValue(ContactDefaultFields.AccountName, value); }
+		}
+
+		public string AccountId {
+			get { return GetString(ContactDefaultFields.AccountId); }
+			set { SetValue(ContactDefaultFields.AccountId, value); }
 		}
 
 		public bool EmailOptOut {
