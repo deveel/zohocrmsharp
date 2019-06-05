@@ -273,7 +273,15 @@ namespace Deveel.Web.Zoho {
 		internal virtual void LoadFromXml(XElement element) {
 			var fieldNodes = element.Descendants();
 			foreach (var node in fieldNodes) {
-				LoadFieldFromXml(node);
+                try
+                {
+                    LoadFieldFromXml(node);
+                }
+                // Skip over malformed XLM - atb
+                catch (FormatException e)
+                {
+                    continue;
+                }
 			}
 		}
 

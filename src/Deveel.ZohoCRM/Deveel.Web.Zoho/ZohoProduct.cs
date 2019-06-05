@@ -17,9 +17,15 @@ namespace Deveel.Web.Zoho
         {
         }
 
-        protected override string IdFieldName
+        //protected override string IdFieldName
+        //{
+         //   get { return "PRODUCTID"; }
+        //}
+
+        public string productId
         {
-            get { return "PRODUCTID"; }
+            get { return GetString("PRODUCTID"); }
+            set { SetValue("PRODUCTID", value); }
         }
 
         public string Name

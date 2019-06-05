@@ -21,7 +21,7 @@ namespace Deveel.Web.Zoho {
 		public const string ShippingState = "Shipping State";
 		public const string ShippingCountry = "Shipping Country";
 		public const string ShippingCode = "Shipping Code";
-		public const string Emplyees = "Employees";
+		public const string Employees = "Employees";
 		public const string Ownership = "Ownership";
 		public const string Website = "Website";
 
@@ -43,7 +43,7 @@ namespace Deveel.Web.Zoho {
 			ShippingState,
 			ShippingCountry,
 			ShippingCode,
-			Emplyees,
+			Employees,
 			Ownership,
 			Website
 		};
